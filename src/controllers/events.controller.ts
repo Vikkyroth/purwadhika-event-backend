@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createEventAction, deleteEventAction, getEventAction, getEventsAction, updateEventAction } from "../actions/events.action";
+import { createEventAction, deleteEventAction, getEventByIDAction, getEventBySlugAction, getEventsAction, updateEventAction } from "../actions/events.action";
 
 const getEventsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -15,10 +15,24 @@ const getEventsController = async (req: Request, res: Response, next: NextFuncti
   }
 }
 
-const getEventController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getEventByIDController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
-    const data = await getEventAction(Number(id));
+    const data = await getEventByIDAction(Number(id));
+
+    res.status(200).json({
+      message: "Get event success",
+      data
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getEventBySlugController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { slug } = req.params;
+    const data = await getEventBySlugAction(slug);
 
     res.status(200).json({
       message: "Get event success",
@@ -72,7 +86,8 @@ const deleteEventController = async (req: Request, res: Response, next: NextFunc
 
 export {
   getEventsController,
-  getEventController,
+  getEventByIDController,
+  getEventBySlugController,
   createEventController,
   updateEventController,
   deleteEventController,

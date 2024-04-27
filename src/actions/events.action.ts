@@ -1,5 +1,5 @@
 import { Event } from "@prisma/client";
-import { createEventQuery, deleteEventQuery, getEventBySlugQuery, getEventQuery, getEventsQuery, updateEventQuery } from "../queries/events.query";
+import { createEventQuery, deleteEventQuery, getEventByIDQuery, getEventBySlugQuery, getEventsQuery, updateEventQuery } from "../queries/events.query";
 import { HttpException } from "../exceptions/HttpException";
 import { IEvent } from "../interfaces/events.interface";
 
@@ -12,9 +12,21 @@ const getEventsAction = async (): Promise<Event[]> => {
   }
 }
 
-const getEventAction = async (id: number): Promise<Event | null> => {
+const getEventByIDAction = async (id: number): Promise<Event | null> => {
   try {
-    const event = await getEventQuery(id);
+    const event = await getEventByIDQuery(id);
+
+    if (!event) throw new HttpException(404, "Data not found");
+
+    return event;
+  } catch (err) {
+    throw err;
+  }
+}
+
+const getEventBySlugAction = async (slug: string): Promise<Event | null> => {
+  try {
+    const event = await getEventBySlugQuery(slug);
 
     if (!event) throw new HttpException(404, "Data not found");
 
@@ -60,7 +72,8 @@ const deleteEventAction = async (id: number): Promise<Event> => {
 
 export {
   getEventsAction,
-  getEventAction,
+  getEventByIDAction,
+  getEventBySlugAction,
   createEventAction,
   updateEventAction,
   deleteEventAction,

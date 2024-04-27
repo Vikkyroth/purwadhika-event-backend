@@ -12,7 +12,7 @@ const getEventsQuery = async (): Promise<Event[]> => {
   }
 }
 
-const getEventQuery = async (id: number): Promise<Event | null> => {
+const getEventByIDQuery = async (id: number): Promise<Event | null> => {
   try {
     const event = await prisma.event.findUnique({
       where: {
@@ -104,7 +104,7 @@ const deleteEventQuery = async (id: number): Promise<Event> => {
 
 export {
   getEventsQuery,
-  getEventQuery,
+  getEventByIDQuery,
   getEventBySlugQuery,
   createEventQuery,
   updateEventQuery,
